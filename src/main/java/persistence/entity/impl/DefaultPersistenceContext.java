@@ -26,7 +26,7 @@ public class DefaultPersistenceContext implements PersistenceContext {
     @Override
     public void addEntity(Object entity) {
         EntityKey key = new EntityKey(entity);
-        if (context.containsKey(key)) {
+        if (isContainsKey(context, key)) {
             context.remove(key);
             context.put(key, entity);
             return;
@@ -37,6 +37,11 @@ public class DefaultPersistenceContext implements PersistenceContext {
     @Override
     public void removeEntity(Object entity) {
         EntityKey key = new EntityKey(entity);
+        if (isNotContainsKey(context, key)) {
+            throw new NotExistException(MessageFormat.format(
+                    "Entity in context. entity id: {0}, entity type: {1}", key.key(),
+                    entity.getClass().getSimpleName()));
+        }
         context.remove(key);
     }
 
@@ -50,6 +55,14 @@ public class DefaultPersistenceContext implements PersistenceContext {
     public <T> EntitySnapshot getDatabaseSnapshot(T entity) {
         EntityKey key = new EntityKey(entity);
         return snapshots.get(key);
+    }
+
+    @Override
+    public void removeDatabaseSnapshot(Object entity) {
+        EntityKey key = new EntityKey(entity);
+        if (isContainsKey(snapshots, key)) {
+            snapshots.remove(key);
+        }
     }
 
     @Override
@@ -80,6 +93,14 @@ public class DefaultPersistenceContext implements PersistenceContext {
     public <T> boolean isDirty(T entity) {
         EntitySnapshot snapshot = getDatabaseSnapshot(entity);
         return snapshot.hasDifferenceWith(entity);
+    }
+
+    private <V> boolean isContainsKey(Map<EntityKey, V> map, EntityKey key) {
+        return map.containsKey(key);
+    }
+
+    private <V> boolean isNotContainsKey(Map<EntityKey, V> map, EntityKey key) {
+        return !isContainsKey(map, key);
     }
 
 }

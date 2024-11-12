@@ -1,6 +1,7 @@
 package persistence.entity.impl;
 
 import static persistence.entity.EntityStatus.DELETED;
+import static persistence.entity.EntityStatus.GONE;
 import static persistence.entity.EntityStatus.LOADING;
 import static persistence.entity.EntityStatus.MANAGED;
 
@@ -54,8 +55,10 @@ public class DefaultEntityManager implements EntityManager {
 
     @Override
     public void remove(Object entity) {
-        persister.delete(entity);
         context.updateEntityEntry(entity, DELETED);
+        persister.delete(entity);
+        context.updateEntityEntry(entity, GONE);
+        context.removeDatabaseSnapshot(entity);
     }
 
     @Override
