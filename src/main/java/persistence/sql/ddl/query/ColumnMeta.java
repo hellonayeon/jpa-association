@@ -23,6 +23,15 @@ public record ColumnMeta(int type,
         );
     }
 
+    public ColumnMeta(Field field, String columnName) {
+        this(
+                ColumnType.getSqlType(field.getType()),
+                columnName,
+                getLength(field),
+                getNullable(field)
+        );
+    }
+
     private static int getLength(Field field) {
         if (ColumnType.isNotVarcharType(field.getType())) {
             return 0;
