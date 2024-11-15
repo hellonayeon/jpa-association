@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query;
+package persistence.sql.ddl.query.constraint;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import persistence.sql.ddl.query.association.Association;
+import persistence.sql.ddl.query.association.AssociationType;
 import persistence.util.PackageScanner;
 import persistence.validator.AnnotationValidator;
 
@@ -34,7 +36,7 @@ public class ForeignKeyConstraintProvider {
                 .collect(Collectors.toMap(
                         clazz -> clazz,
                         clazz -> Arrays.stream(clazz.getDeclaredFields())
-                                .filter(field -> AnnotationValidator.isPresent(field, associationType.type))
+                                .filter(field -> AnnotationValidator.isPresent(field, associationType.type()))
                                 .findFirst()
                 ));
 
@@ -44,7 +46,7 @@ public class ForeignKeyConstraintProvider {
                 continue;
             }
 
-            Association association = associationType.association;
+            Association association = associationType.association();
             foreignKeyConstraints.put(clazz, association.foreignKeyConstraint(clazz, associationField.get()));
         }
     }

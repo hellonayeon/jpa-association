@@ -1,6 +1,7 @@
-package persistence.sql.ddl.query;
+package persistence.sql.ddl.query.constraint;
 
 import java.lang.reflect.Field;
+import persistence.sql.ddl.query.ColumnMeta;
 
 public class SoftForeignKeyConstraint implements ForeignKeyConstraint {
 

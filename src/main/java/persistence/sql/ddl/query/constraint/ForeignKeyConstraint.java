@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query;
+package persistence.sql.ddl.query.constraint;
 
 public interface ForeignKeyConstraint {
 

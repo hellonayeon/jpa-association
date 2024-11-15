@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import persistence.sql.ddl.query.ColumnMeta;
 import persistence.sql.dialect.Dialect;
-import persistence.sql.ddl.query.PrimaryKeyConstraint;
+import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
 import persistence.sql.metadata.TableName;
 
 public class CreateQueryBuilder {

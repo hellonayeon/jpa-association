@@ -1,7 +1,7 @@
 package persistence.sql.ddl.query.builder;
 
 import persistence.sql.dialect.Dialect;
-import persistence.sql.ddl.query.PrimaryKeyConstraint;
+import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
 
 public class TableDefinition {
 
