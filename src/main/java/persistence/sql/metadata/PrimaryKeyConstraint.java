@@ -8,15 +8,15 @@ import java.util.Arrays;
 import persistence.exception.NotExistException;
 import persistence.sql.ddl.query.ColumnMeta;
 
-public record Identifier(ColumnMeta column,
-                         GenerationType generationType) {
+public record PrimaryKeyConstraint(ColumnMeta column,
+                                   GenerationType generationType) {
 
-    public static Identifier from(Field[] fields) {
+    public static PrimaryKeyConstraint from(Field[] fields) {
         Field identifierField = Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow(() -> new NotExistException("identification."));
-        return new Identifier(new ColumnMeta(identifierField), generationType(identifierField));
+        return new PrimaryKeyConstraint(new ColumnMeta(identifierField), generationType(identifierField));
     }
 
     private static GenerationType generationType(Field field) {
