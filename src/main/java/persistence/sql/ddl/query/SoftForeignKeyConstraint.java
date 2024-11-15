@@ -4,10 +4,25 @@ import java.lang.reflect.Field;
 
 public class SoftForeignKeyConstraint implements ForeignKeyConstraint {
 
+    private final Class<?> appliedClass;
     private final ColumnMeta columnMeta;
 
-    public SoftForeignKeyConstraint(Field field, String columnName) {
-        this.columnMeta = new ColumnMeta(field, columnName);
+    public SoftForeignKeyConstraint(Class<?> appliedClass, Field field, String columnName) {
+        this(appliedClass, new ColumnMeta(field, columnName));
     }
 
+    private SoftForeignKeyConstraint(Class<?> appliedClass, ColumnMeta columnMeta) {
+        this.appliedClass = appliedClass;
+        this.columnMeta = columnMeta;
+    }
+
+    @Override
+    public Class<?> appliedClass() {
+        return this.appliedClass;
+    }
+
+    @Override
+    public String constraint() {
+        return null;
+    }
 }
