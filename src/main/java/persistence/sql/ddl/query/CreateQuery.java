@@ -6,7 +6,6 @@ import static persistence.validator.AnnotationValidator.notPredicate;
 import jakarta.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
-import persistence.sql.metadata.PrimaryKeyConstraint;
 import persistence.sql.metadata.TableName;
 
 public record CreateQuery(TableName tableName,
