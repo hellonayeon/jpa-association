@@ -21,7 +21,7 @@ public record CreateQuery(TableName tableName,
                         .filter(notPredicate(Transient.class))
                         .map(field -> new ColumnMeta(field, clazz))
                         .toList(),
-                PrimaryKeyConstraint.from(clazz.getDeclaredFields())
+                PrimaryKeyConstraint.from(clazz)
         );
     }
 

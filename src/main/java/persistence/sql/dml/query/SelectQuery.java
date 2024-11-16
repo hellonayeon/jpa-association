@@ -5,7 +5,6 @@ import static persistence.validator.AnnotationValidator.isNotPresent;
 import jakarta.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
-import persistence.sql.metadata.ColumnAlias;
 import persistence.sql.metadata.ColumnName;
 import persistence.sql.metadata.TableAlias;
 import persistence.sql.metadata.TableName;
