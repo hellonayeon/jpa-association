@@ -11,12 +11,16 @@ import persistence.sql.ddl.query.ColumnMeta;
 public record PrimaryKeyConstraint(ColumnMeta column,
                                    GenerationType generationType) {
 
-    public static PrimaryKeyConstraint from(Field[] fields) {
-        Field identifierField = Arrays.stream(fields)
+    public static PrimaryKeyConstraint from(Class<?> clazz) {
+        Field idField = idField(clazz);
+        return new PrimaryKeyConstraint(new ColumnMeta(idField, clazz), generationType(idField));
+    }
+
+    private static Field idField(Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> field.isAnnotationPresent(Id.class))
                 .findFirst()
                 .orElseThrow(() -> new NotExistException("identification."));
-        return new PrimaryKeyConstraint(new ColumnMeta(identifierField), generationType(identifierField));
     }
 
     private static GenerationType generationType(Field field) {

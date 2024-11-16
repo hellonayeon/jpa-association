@@ -19,7 +19,7 @@ public record CreateQuery(TableName tableName,
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(notIdentifier())
                         .filter(notPredicate(Transient.class))
-                        .map(ColumnMeta::new)
+                        .map(field -> new ColumnMeta(field, clazz))
                         .toList(),
                 PrimaryKeyConstraint.from(clazz.getDeclaredFields())
         );

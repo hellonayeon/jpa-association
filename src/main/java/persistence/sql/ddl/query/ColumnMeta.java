@@ -14,10 +14,10 @@ public record ColumnMeta(int type,
 
     private static final int DEFAULT_LENGTH = 255;
 
-    public ColumnMeta(Field field) {
+    public ColumnMeta(Field field, Class<?> clazz) {
         this(
           ColumnType.getSqlType(field.getType()),
-          new ColumnName(field).value(),
+          new ColumnName(field, clazz).value(),
           getLength(field),
           getNullable(field)
         );
