@@ -17,7 +17,7 @@ public class OneToManyAssociation implements Association {
     public ForeignKeyConstraint foreignKeyConstraint(Class<?> clazz, Field field) {
         if (hasJoinColumnAnnotation(field)) {
             return new SoftForeignKeyConstraint(
-                    childClass(clazz, field),
+                    childClass(field),
                     parentIdField(clazz),
                     joinColumnName(field));
         }
@@ -40,7 +40,7 @@ public class OneToManyAssociation implements Association {
         return !hasJoinColumnAnnotation(field);
     }
 
-    private Class<?> childClass(Class<?> clazz, Field field) {
+    private Class<?> childClass(Field field) {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType parameterizedType) {
             Type childType = parameterizedType.getActualTypeArguments()[0];
