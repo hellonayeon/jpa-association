@@ -8,7 +8,8 @@ import persistence.entity.Relation;
 import persistence.sql.ddl.type.ColumnType;
 import persistence.sql.metadata.ColumnName;
 
-public record ColumnMeta(int type,
+public record ColumnMeta(Field field,
+                         int type,
                          String name,
                          int length,
                          boolean nullable,
@@ -18,6 +19,7 @@ public record ColumnMeta(int type,
 
     public ColumnMeta(Field field, Class<?> clazz) {
         this(
+                field,
                 ColumnType.getSqlType(field.getType()),
                 new ColumnName(field, clazz).value(),
                 getLength(field),
@@ -28,6 +30,7 @@ public record ColumnMeta(int type,
 
     public ColumnMeta(Field field, String columnName) {
         this(
+                field,
                 ColumnType.getSqlType(field.getType()),
                 columnName,
                 getLength(field),

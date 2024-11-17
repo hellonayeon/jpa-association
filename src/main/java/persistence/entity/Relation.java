@@ -12,19 +12,22 @@ import persistence.sql.metadata.TableName;
 
 public class Relation {
 
+    private final Class<?> joinColumnType;
     private final TableName joinTableName;
     private final String joinColumnName;
     private final FetchType fetchType;
     private final boolean hasRelation;
 
     private Relation() {
+        this.joinColumnType = null;
         this.joinTableName = null;
         this.joinColumnName = null;
         this.fetchType = null;
         this.hasRelation = false;
     }
 
-    private Relation(TableName joinTableName, String joinColumnName, FetchType fetchType) {
+    private Relation(Class<?> joinColumnType, TableName joinTableName, String joinColumnName, FetchType fetchType) {
+        this.joinColumnType = joinColumnType;
         this.joinTableName = joinTableName;
         this.joinColumnName = joinColumnName;
         this.fetchType = fetchType;
@@ -46,6 +49,7 @@ public class Relation {
             Type type = parameterizedType.getActualTypeArguments()[0];
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             return new Relation(
+                    (Class<?>) type,
                     new TableName((Class<?>) type),
                     joinColumnName(field),
                     oneToMany.fetch()
@@ -60,6 +64,26 @@ public class Relation {
             return joinColumn.name();
         }
         throw new NotExistException("@JoinColumn annotation. field: " + field.getName());
+    }
+
+    public Class<?> getJoinColumnType() {
+        return joinColumnType;
+    }
+
+    public TableName getJoinTableName() {
+        return joinTableName;
+    }
+
+    public String getJoinColumnName() {
+        return joinColumnName;
+    }
+
+    public FetchType getFetchType() {
+        return fetchType;
+    }
+
+    public boolean hasRelation() {
+        return hasRelation;
     }
 
 }

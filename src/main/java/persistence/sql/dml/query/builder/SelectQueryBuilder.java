@@ -12,6 +12,7 @@ import persistence.sql.metadata.TableName;
 public class SelectQueryBuilder {
 
     private static final String SELECT = "select";
+    private static final String ALL_COLUMN = "*";
     private static final String FROM = "from";
 
     private final StringBuilder queryString;
@@ -32,6 +33,13 @@ public class SelectQueryBuilder {
         queryString.append( SELECT )
                 .append( " " )
                 .append( columnClauseWithAlias(columnNames) );
+        return this;
+    }
+
+    public SelectQueryBuilder select() {
+        queryString.append( SELECT )
+                .append( " " )
+                .append( ALL_COLUMN );
         return this;
     }
 
