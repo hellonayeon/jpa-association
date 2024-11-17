@@ -8,6 +8,10 @@ import java.lang.reflect.Field;
 
 public record ColumnName(String value, TableAlias alias) {
 
+    public ColumnName(Field field, TableName tableName) {
+        this(getName(field), new TableAlias(tableName));
+    }
+
     public ColumnName(Field field, Class<?> clazz) {
         this(getName(field), new TableAlias(clazz));
     }

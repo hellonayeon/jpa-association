@@ -2,6 +2,10 @@ package persistence.sql.metadata;
 
 public record TableAlias(String value) {
 
+    public TableAlias(TableName tableName) {
+        this(tableName.value());
+    }
+
     public TableAlias(Class<?> clazz) {
         this(alias(clazz));
     }

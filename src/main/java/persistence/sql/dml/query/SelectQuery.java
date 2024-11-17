@@ -16,10 +16,10 @@ public record SelectQuery(TableName tableName,
     public SelectQuery(Class<?> clazz) {
         this(
                 new TableName(clazz),
-                new TableAlias(clazz),
+                new TableAlias(new TableName(clazz)),
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
-                        .map(field -> new ColumnName(field, clazz))
+                        .map(field -> new ColumnName(field, new TableName(clazz)))
                         .toList()
         );
     }
