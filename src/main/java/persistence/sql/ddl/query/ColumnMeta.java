@@ -4,22 +4,25 @@ import static persistence.validator.AnnotationValidator.isNotPresent;
 
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;
+import persistence.entity.Relation;
 import persistence.sql.ddl.type.ColumnType;
 import persistence.sql.metadata.ColumnName;
 
 public record ColumnMeta(int type,
                          String name,
                          int length,
-                         boolean nullable) {
+                         boolean nullable,
+                         Relation relation) {
 
     private static final int DEFAULT_LENGTH = 255;
 
     public ColumnMeta(Field field, Class<?> clazz) {
         this(
-          ColumnType.getSqlType(field.getType()),
-          new ColumnName(field, clazz).value(),
-          getLength(field),
-          getNullable(field)
+                ColumnType.getSqlType(field.getType()),
+                new ColumnName(field, clazz).value(),
+                getLength(field),
+                getNullable(field),
+                Relation.from(field)
         );
     }
 
@@ -28,7 +31,8 @@ public record ColumnMeta(int type,
                 ColumnType.getSqlType(field.getType()),
                 columnName,
                 getLength(field),
-                getNullable(field)
+                getNullable(field),
+                Relation.from(field)
         );
     }
 

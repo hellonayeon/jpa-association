@@ -1,21 +1,20 @@
 package persistence.entity.impl;
 
+import static persistence.loader.EntityAssociationType.*;
+
 import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityLoader;
 import persistence.sql.dml.query.SelectQuery;
 import persistence.sql.dml.query.WhereCondition;
-import persistence.sql.dml.query.builder.AssociationSelectQueryBuilder;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class DefaultEntityLoader implements EntityLoader {
 
     private final JdbcTemplate jdbcTemplate;
-    private final AssociationSelectQueryBuilder selectQueryBuilder;
 
     public DefaultEntityLoader(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.selectQueryBuilder = new AssociationSelectQueryBuilder();
     }
 
     @Override
@@ -28,4 +27,5 @@ public class DefaultEntityLoader implements EntityLoader {
                 .build();
         return jdbcTemplate.queryForObject(queryString, new EntityRowMapper<>(clazz));
     }
+
 }
