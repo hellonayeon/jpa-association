@@ -1,13 +1,11 @@
 package persistence.entity.impl;
 
-import java.util.Arrays;
 import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityLoader;
-import persistence.entity.Relation;
-import persistence.meta.ColumnMeta;
-import persistence.sql.dml.query.SelectQuery;
+import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.WhereCondition;
+import persistence.sql.dml.query.WhereOperator;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class DefaultEntityLoader implements EntityLoader {
@@ -22,30 +20,21 @@ public class DefaultEntityLoader implements EntityLoader {
 
     @Override
     public <T> T load(Class<T> clazz, Object id) {
-        SelectQuery query = new SelectQuery(clazz);
-        String queryString = SelectQueryBuilder.builder()
-                .select(query.columnNames())
-                .from(query.tableName())
-                .where(List.of(new WhereCondition("id", "=", id)))
+        SchemaMeta schemaMeta = new SchemaMeta(clazz);
+        String query = SelectQueryBuilder.builder()
+                .select()
+                .from(schemaMeta.tableName())
+                .where(List.of(new WhereCondition(schemaMeta.primaryKeyColumnName(), WhereOperator.EQUAL, id)))
                 .build();
 
-        T instance = jdbcTemplate.queryForObject(queryString, new EntityRowMapper<>(clazz));
-        if (hasNotRelation(clazz)) {
+        T instance = jdbcTemplate.queryForObject(query, new EntityRowMapper<>(clazz));
+        if (schemaMeta.hasNotRelation()) {
             return instance;
         }
 
         return collectionLoader.loadCollection(clazz, instance);
     }
 
-    private boolean hasRelation(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> new ColumnMeta(field, clazz))
-                .map(ColumnMeta::relation)
-                .anyMatch(Relation::hasRelation);
-    }
 
-    private boolean hasNotRelation(Class<?> clazz) {
-        return !hasRelation(clazz);
-    }
 
 }

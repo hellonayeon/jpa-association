@@ -1,6 +1,7 @@
 package persistence.sql.dml.query.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static persistence.sql.dml.query.WhereOperator.EQUAL;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +20,7 @@ class UpdateQueryBuilderTest {
         UpdateQueryBuilder queryBuilder = UpdateQueryBuilder.builder()
                 .update(query.tableName())
                 .set(query.columns())
-                .where(List.of(new WhereCondition("id", "=", 1L)));
+                .where(List.of(new WhereCondition("id", EQUAL, 1L)));
         String expectedQuery = """
                 update users set nick_name = 'person name', old = 20, email = 'person@email.com' where id = 1""";
         assertEquals(queryBuilder.build(), expectedQuery);

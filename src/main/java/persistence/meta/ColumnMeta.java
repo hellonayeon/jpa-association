@@ -5,6 +5,7 @@ import static persistence.validator.AnnotationValidator.isNotPresent;
 import static persistence.validator.AnnotationValidator.isPresent;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import persistence.entity.Relation;
 import persistence.sql.ddl.type.ColumnType;
@@ -14,6 +15,7 @@ public record ColumnMeta(Field field,
                          String name,
                          int length,
                          boolean nullable,
+                         boolean isPrimaryKey,
                          Relation relation) {
 
     private static final int DEFAULT_LENGTH = 255;
@@ -25,6 +27,19 @@ public record ColumnMeta(Field field,
                 getName(field),
                 getLength(field),
                 getNullable(field),
+                getIsPrimaryKey(field),
+                Relation.from(field)
+        );
+    }
+
+    public ColumnMeta(Field field, String columnName) {
+        this(
+                field,
+                ColumnType.getSqlType(field.getType()),
+                columnName,
+                getLength(field),
+                getNullable(field),
+                getIsPrimaryKey(field),
                 Relation.from(field)
         );
     }
@@ -49,17 +64,6 @@ public record ColumnMeta(Field field,
         return field.getName();
     }
 
-    public ColumnMeta(Field field, String columnName) {
-        this(
-                field,
-                ColumnType.getSqlType(field.getType()),
-                columnName,
-                getLength(field),
-                getNullable(field),
-                Relation.from(field)
-        );
-    }
-
     private static int getLength(Field field) {
         if (ColumnType.isNotVarcharType(field.getType())) {
             return 0;
@@ -79,6 +83,10 @@ public record ColumnMeta(Field field,
         }
         Column annotation = field.getAnnotation(Column.class);
         return annotation.nullable();
+    }
+
+    private static boolean getIsPrimaryKey(Field field) {
+        return isPresent(field, Id.class);
     }
 
     public boolean notNull() {

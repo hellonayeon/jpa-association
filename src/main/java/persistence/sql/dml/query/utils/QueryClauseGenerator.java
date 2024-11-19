@@ -22,7 +22,7 @@ public class QueryClauseGenerator {
                 .append( WHERE )
                 .append(
                         whereConditions.stream()
-                        .map(condition -> condition.columnName() + " " + condition.operator() + " " + condition.value())
+                        .map(condition -> condition.name() + " " + condition.operator().value() + " " + condition.value())
                         .collect(Collectors.joining(AND, " ", ""))
                 ).toString();
     }

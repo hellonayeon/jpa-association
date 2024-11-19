@@ -1,6 +1,7 @@
 package persistence.sql.dml.query.builder;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static persistence.sql.dml.query.WhereOperator.EQUAL;
 
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -26,7 +27,7 @@ public class DeleteQueryBuilderTest {
     void deleteQueryWhereId() {
         DeleteQueryBuilder queryBuilder = DeleteQueryBuilder.builder()
                 .delete(new TableName(Person.class))
-                .where(List.of(new WhereCondition("id", "=", 1L)));
+                .where(List.of(new WhereCondition("id", EQUAL, 1L)));
         String expectedQuery = """
                 delete from users where id = 1""";
         assertEquals(queryBuilder.build(), expectedQuery);

@@ -8,7 +8,7 @@ import persistence.entity.EntityId;
 import persistence.entity.Relation;
 import persistence.meta.ColumnMeta;
 import persistence.sql.dml.query.WhereCondition;
-import persistence.sql.dml.query.WhereOperation;
+import persistence.sql.dml.query.WhereOperator;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class EntityCollectionLoader {
@@ -29,7 +29,7 @@ public class EntityCollectionLoader {
                     .where(List.of(
                             new WhereCondition(
                                     relation.getJoinColumnName(),
-                                    WhereOperation.EQUAL.value(),
+                                    WhereOperator.EQUAL,
                                     EntityId.getIdValue(instance)))
                     )
                     .build();

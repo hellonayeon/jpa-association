@@ -1,12 +1,12 @@
 package persistence.sql.dml.query;
 
-public enum WhereOperation {
+public enum WhereOperator {
 
-    EQUAL("+");
+    EQUAL("=");
 
     String value;
 
-    WhereOperation(String value) {
+    WhereOperator(String value) {
         this.value = value;
     }
 

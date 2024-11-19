@@ -1,5 +1,7 @@
 package persistence.sql.dml.query.builder;
 
+import static persistence.sql.dml.query.WhereOperator.EQUAL;
+
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
@@ -12,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import persistence.exception.NotExistException;
 import persistence.exception.UnknownException;
-import persistence.sql.dml.query.SelectQuery;
+import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.WhereCondition;
 
 public class AssociationSelectQueryBuilder {
@@ -26,19 +28,19 @@ public class AssociationSelectQueryBuilder {
 
         List<String> queries = new ArrayList<>();
         if (FetchType.EAGER == fetchType) {
-            SelectQuery parentSelectQuery = new SelectQuery(clazz);
-            String parentSelectQueryString = SelectQueryBuilder.builder()
-                    .select(parentSelectQuery.columnNames())
-                    .from(parentSelectQuery.tableName())
-                    .where(List.of(new WhereCondition("id", "=", id)))
+            SchemaMeta parentSchemaMeta = new SchemaMeta(clazz);
+            String parentQuery = SelectQueryBuilder.builder()
+                    .select()
+                    .from(parentSchemaMeta.tableName())
+                    .where(List.of(new WhereCondition(parentSchemaMeta.primaryKeyColumnName(), EQUAL, id)))
                     .build();
-            queries.add(parentSelectQueryString);
+            queries.add(parentQuery);
 
-            SelectQuery childSelectQuery = new SelectQuery(childClass(oneToManyField.get()));
+            SchemaMeta childSchemaMeta = new SchemaMeta(childClass(oneToManyField.get()));
             String childSelectQueryString = SelectQueryBuilder.builder()
-                    .select(childSelectQuery.columnNames())
-                    .from(childSelectQuery.tableName())
-                    .where(List.of(new WhereCondition(joinColumnName(oneToManyField.get()), "=", id)))
+                    .select()
+                    .from(childSchemaMeta.tableName())
+                    .where(List.of(new WhereCondition(joinColumnName(oneToManyField.get()), EQUAL, id)))
                     .build();
             queries.add(childSelectQueryString);
         }
