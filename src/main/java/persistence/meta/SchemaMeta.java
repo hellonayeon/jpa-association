@@ -4,16 +4,16 @@ import static persistence.validator.AnnotationValidator.isNotPresent;
 
 import jakarta.persistence.Transient;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import persistence.entity.Relation;
 import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
 
-public class SchemaMeta {
-
-    private final Class<?> clazz;
-    private final List<ColumnMeta> columnMetas;
-    private final TableMeta tableMeta;
-    private final PrimaryKeyConstraint primaryKeyConstraint;
+public record SchemaMeta(Class<?> clazz,
+                         List<ColumnMeta> columnMetas,
+                         List<ColumnValueMeta> columnValueMetas,
+                         TableMeta tableMeta,
+                         PrimaryKeyConstraint primaryKeyConstraint) {
 
     public SchemaMeta(Class<?> clazz) {
         this(
@@ -22,16 +22,26 @@ public class SchemaMeta {
                         .filter(field -> isNotPresent(field, Transient.class))
                         .map(field -> new ColumnMeta(field, clazz))
                         .toList(),
+                Collections.emptyList(),
                 new TableMeta(clazz),
                 PrimaryKeyConstraint.from(clazz)
         );
     }
 
-    private SchemaMeta(Class<?> clazz, List<ColumnMeta> columnMetas, TableMeta tableMeta, PrimaryKeyConstraint primaryKeyConstraint) {
-        this.clazz = clazz;
-        this.columnMetas = columnMetas;
-        this.tableMeta = tableMeta;
-        this.primaryKeyConstraint = primaryKeyConstraint;
+    public SchemaMeta(Object instance) {
+        this(
+                instance.getClass(),
+                Arrays.stream(instance.getClass().getDeclaredFields())
+                        .filter(field -> isNotPresent(field, Transient.class))
+                        .map(field -> new ColumnMeta(field, instance.getClass()))
+                        .toList(),
+                Arrays.stream(instance.getClass().getDeclaredFields())
+                        .filter(field -> isNotPresent(field, Transient.class))
+                        .map(field -> ColumnValueMeta.of(field, instance))
+                        .toList(),
+                new TableMeta(instance.getClass()),
+                PrimaryKeyConstraint.from(instance.getClass())
+        );
     }
 
     private boolean hasRelation() {
@@ -56,6 +66,26 @@ public class SchemaMeta {
     public List<String> columnNames() {
         return columnMetas.stream()
                 .map(ColumnMeta::name)
+                .toList();
+    }
+
+    public List<Object> columnValues() {
+        return columnValueMetas.stream()
+                .map(ColumnValueMeta::value)
+                .toList();
+    }
+
+    public List<String> columnNamesWithoutPrimaryKey() {
+        return columnMetas.stream()
+                .filter(ColumnMeta::isNotPrimaryKey)
+                .map(ColumnMeta::name)
+                .toList();
+    }
+
+    public List<Object> columnValuesWithoutPrimaryKey() {
+        return columnValueMetas.stream()
+                .filter(ColumnValueMeta::isNotPrimaryKey)
+                .map(ColumnValueMeta::value)
                 .toList();
     }
 

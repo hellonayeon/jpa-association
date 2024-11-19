@@ -1,10 +1,10 @@
 package persistence.query;
 
 import jdbc.JdbcTemplate;
+import persistence.meta.SchemaMeta;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.ddl.query.builder.DropQueryBuilder;
 import persistence.sql.dialect.H2Dialect;
-import persistence.sql.dml.query.InsertQuery;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
 
 public class QueryExecutor {
@@ -24,11 +24,12 @@ public class QueryExecutor {
     }
 
     public static void insert(Object object, JdbcTemplate jdbcTemplate) {
-        InsertQuery insertQuery = new InsertQuery(object);
-        InsertQueryBuilder insertQueryBuilder = InsertQueryBuilder.builder()
-                .insert(insertQuery.tableName(), insertQuery.columns())
-                .values(insertQuery.columns());
-        jdbcTemplate.execute(insertQueryBuilder.build());
+        SchemaMeta schemaMeta = new SchemaMeta(object);
+        String query = InsertQueryBuilder.builder()
+                .insert(schemaMeta.tableName(), schemaMeta.columnNamesWithoutPrimaryKey())
+                .values(schemaMeta.columnValuesWithoutPrimaryKey())
+                .build();
+        jdbcTemplate.execute(query);
     }
 
 

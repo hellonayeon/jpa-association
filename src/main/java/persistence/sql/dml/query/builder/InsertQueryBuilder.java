@@ -2,10 +2,7 @@ package persistence.sql.dml.query.builder;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.sql.dml.query.ColumnNameValue;
-import persistence.sql.metadata.ColumnName;
-import persistence.sql.metadata.TableName;
-import persistence.sql.dml.query.utils.QueryClauseGenerator;
+import persistence.sql.ddl.type.ColumnType;
 
 public class InsertQueryBuilder {
 
@@ -26,37 +23,49 @@ public class InsertQueryBuilder {
         return queryString.toString();
     }
 
-    public InsertQueryBuilder insert(TableName tableName, List<ColumnNameValue> columns) {
+
+    public InsertQueryBuilder insert(String tableName, List<String> columnNames) {
         queryString.append( INSERT_INTO )
                 .append( " " )
-                .append( tableName.value() )
-                .append( columnClause(columns.stream().map(ColumnNameValue::columnName).toList()) );
+                .append( tableName )
+                .append( columnClause(columnNames) );
         return this;
     }
 
-    public InsertQueryBuilder values(List<ColumnNameValue> columns) {
+    public InsertQueryBuilder values(List<Object> values) {
         queryString.append( " " )
                 .append( VALUES )
-                .append( valueClause(columns) );
+                .append( valueClause(values) );
         return this;
     }
 
-    private String columnClause(List<ColumnName> columnNames) {
+    private String columnClause(List<String> columnNames) {
         return new StringBuilder()
                 .append( " (" )
-                .append( QueryClauseGenerator.columnClause(columnNames))
+                .append( String.join(", ", columnNames) )
                 .append( ")" )
                 .toString();
     }
 
-    private String valueClause(List<ColumnNameValue> columns) {
+    private String valueClause(List<Object> values) {
         return new StringBuilder()
                 .append(" (")
-                .append( columns.stream()
-                        .map(ColumnNameValue::columnValueString)
+                .append( values.stream()
+                        .map(this::format)
                         .collect(Collectors.joining(", ")) )
                 .append(")")
                 .toString();
+    }
+
+    public String format(Object value) {
+        if (value == null) {
+            return null;
+        }
+
+        if (ColumnType.isVarcharType(value.getClass())) {
+            return "'" + value + "'";
+        }
+        return value.toString();
     }
 
 }

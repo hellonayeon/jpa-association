@@ -19,7 +19,7 @@ public class ColumnDefinition {
                     .append(")");
         }
 
-        if (column.notNull()) {
+        if (column.isNotNull()) {
             builder.append( " " )
                     .append( "not null" );
         }

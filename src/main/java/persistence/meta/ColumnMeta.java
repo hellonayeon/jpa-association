@@ -89,8 +89,12 @@ public record ColumnMeta(Field field,
         return isPresent(field, Id.class);
     }
 
-    public boolean notNull() {
+    public boolean isNotNull() {
         return !nullable;
+    }
+
+    public boolean isNotPrimaryKey() {
+        return !isPrimaryKey;
     }
 
 }

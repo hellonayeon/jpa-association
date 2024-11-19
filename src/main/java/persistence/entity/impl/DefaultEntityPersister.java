@@ -4,8 +4,8 @@ import java.lang.reflect.Field;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityId;
 import persistence.entity.EntityPersister;
+import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.DeleteQuery;
-import persistence.sql.dml.query.InsertQuery;
 import persistence.sql.dml.query.UpdateQuery;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
@@ -21,10 +21,10 @@ public class DefaultEntityPersister implements EntityPersister {
 
     @Override
     public <T> Object insert(T entity) {
-        InsertQuery query = new InsertQuery(entity);
+        SchemaMeta schemaMeta = new SchemaMeta(entity);
         String queryString = InsertQueryBuilder.builder()
-                .insert(query.tableName(), query.columns())
-                .values(query.columns())
+                .insert(schemaMeta.tableName(), schemaMeta.columnNamesWithoutPrimaryKey())
+                .values(schemaMeta.columnValuesWithoutPrimaryKey())
                 .build();
         Object id = jdbcTemplate.insertAndGetPrimaryKey(queryString);
 
