@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query;
+package persistence.meta;
 
 import static persistence.validator.AnnotationValidator.isNotPresent;
 

@@ -6,7 +6,7 @@ import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKey
 
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.query.ColumnMeta;
+import persistence.meta.ColumnMeta;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
 import persistence.sql.metadata.TableName;

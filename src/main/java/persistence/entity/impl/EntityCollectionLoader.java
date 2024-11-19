@@ -6,7 +6,7 @@ import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityId;
 import persistence.entity.Relation;
-import persistence.sql.ddl.query.ColumnMeta;
+import persistence.meta.ColumnMeta;
 import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.WhereOperation;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;

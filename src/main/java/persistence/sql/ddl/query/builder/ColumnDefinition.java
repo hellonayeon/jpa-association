@@ -1,6 +1,6 @@
 package persistence.sql.ddl.query.builder;
 
-import persistence.sql.ddl.query.ColumnMeta;
+import persistence.meta.ColumnMeta;
 import persistence.sql.ddl.type.ColumnType;
 import persistence.sql.dialect.Dialect;
 

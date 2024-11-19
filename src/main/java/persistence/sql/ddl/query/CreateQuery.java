@@ -6,6 +6,7 @@ import static persistence.validator.AnnotationValidator.notPredicate;
 import jakarta.persistence.Transient;
 import java.util.Arrays;
 import java.util.List;
+import persistence.meta.ColumnMeta;
 import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
 import persistence.sql.metadata.TableName;
 
