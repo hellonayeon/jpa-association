@@ -1,11 +1,14 @@
 package persistence.entity.impl;
 
+import static persistence.sql.dml.query.WhereOperator.EQUAL;
+
 import java.lang.reflect.Field;
+import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityId;
 import persistence.entity.EntityPersister;
 import persistence.meta.SchemaMeta;
-import persistence.sql.dml.query.UpdateQuery;
+import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
 import persistence.sql.dml.query.builder.UpdateQueryBuilder;
@@ -44,12 +47,13 @@ public class DefaultEntityPersister implements EntityPersister {
 
     @Override
     public <T> void update(T entity) {
-        UpdateQuery query = new UpdateQuery(entity);
-        String queryString = UpdateQueryBuilder.builder()
-                        .update(query.tableName())
-                        .set(query.columns())
-                        .build();
-        jdbcTemplate.execute(queryString);
+        SchemaMeta schemaMeta = new SchemaMeta(entity);
+        String query = UpdateQueryBuilder.builder()
+                .update(schemaMeta.tableName())
+                .set(schemaMeta.columnNamesWithoutPrimaryKey(), schemaMeta.columnValuesWithoutPrimaryKey())
+                .where(List.of(new WhereCondition(schemaMeta.primaryKeyColumnName(), EQUAL, EntityId.getIdValue(entity))))
+                .build();
+        jdbcTemplate.execute(query);
     }
 
     @Override
