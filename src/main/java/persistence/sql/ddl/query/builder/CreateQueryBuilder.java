@@ -3,7 +3,7 @@ package persistence.sql.ddl.query.builder;
 import static persistence.sql.ddl.query.builder.ColumnDefinition.define;
 import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyColumn;
 import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyConstraint;
-import static persistence.validator.AnnotationValidator.*;
+import static persistence.validator.AnnotationValidator.isNotPresent;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.Transient;
@@ -12,10 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import persistence.meta.ColumnMeta;
 import persistence.meta.TableMeta;
-import persistence.sql.dialect.Dialect;
 import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
-import persistence.sql.metadata.TableName;
-import persistence.validator.AnnotationValidator;
+import persistence.sql.dialect.Dialect;
 
 public class CreateQueryBuilder {
 

@@ -8,12 +8,12 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import persistence.exception.NotExistException;
 import persistence.exception.UnknownException;
-import persistence.sql.metadata.TableName;
+import persistence.meta.TableMeta;
 
 public class Relation {
 
     private final Class<?> joinColumnType;
-    private final TableName joinTableName;
+    private final String joinTableName;
     private final String joinColumnName;
     private final FetchType fetchType;
     private final boolean hasRelation;
@@ -26,7 +26,7 @@ public class Relation {
         this.hasRelation = false;
     }
 
-    private Relation(Class<?> joinColumnType, TableName joinTableName, String joinColumnName, FetchType fetchType) {
+    private Relation(Class<?> joinColumnType, String joinTableName, String joinColumnName, FetchType fetchType) {
         this.joinColumnType = joinColumnType;
         this.joinTableName = joinTableName;
         this.joinColumnName = joinColumnName;
@@ -47,10 +47,11 @@ public class Relation {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType parameterizedType) {
             Type type = parameterizedType.getActualTypeArguments()[0];
+            Class<?> typeClazz = (Class<?>) type;
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
             return new Relation(
-                    (Class<?>) type,
-                    new TableName((Class<?>) type),
+                    typeClazz,
+                    (new TableMeta(typeClazz)).name(),
                     joinColumnName(field),
                     oneToMany.fetch()
             );
@@ -70,7 +71,7 @@ public class Relation {
         return joinColumnType;
     }
 
-    public TableName getJoinTableName() {
+    public String getJoinTableName() {
         return joinTableName;
     }
 

@@ -5,7 +5,6 @@ import static persistence.sql.dml.query.utils.QueryClauseGenerator.whereClause;
 import java.util.List;
 import java.util.stream.Collectors;
 import persistence.sql.dml.query.WhereCondition;
-import persistence.sql.metadata.TableName;
 
 public class SelectQueryBuilder {
 
@@ -52,14 +51,6 @@ public class SelectQueryBuilder {
                 .append( FROM )
                 .append( " " )
                 .append( tableName );
-        return this;
-    }
-
-    public SelectQueryBuilder from(TableName tableName) {
-        queryString.append( " " )
-                .append( FROM )
-                .append( " " )
-                .append( tableName.value() );
         return this;
     }
 
