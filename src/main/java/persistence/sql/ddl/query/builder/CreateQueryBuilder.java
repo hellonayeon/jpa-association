@@ -4,9 +4,12 @@ import static persistence.sql.ddl.query.builder.ColumnDefinition.define;
 import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyColumn;
 import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyConstraint;
 
+import java.beans.Transient;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import persistence.meta.ColumnMeta;
+import persistence.meta.TableMeta;
 import persistence.sql.dialect.Dialect;
 import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
 import persistence.sql.metadata.TableName;
@@ -29,6 +32,31 @@ public class CreateQueryBuilder {
 
     public String build() {
         return queryString.toString();
+    }
+
+    public CreateQueryBuilder create(Class<?> clazz) {
+        TableMeta tableMeta = new TableMeta(clazz);
+        List<ColumnMeta> columnMetas = Arrays.stream(clazz.getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Transient.class))
+                .map(field -> new ColumnMeta(field, clazz))
+                .toList();
+        PrimaryKeyConstraint primaryKeyConstraint = PrimaryKeyConstraint.from(clazz);
+
+        queryString.append( CREATE_TABLE )
+                .append( " " )
+                .append( tableMeta.name() )
+                .append( " (" );
+
+        queryString.append( definePrimaryKeyColumn(primaryKeyConstraint, dialect) ).append(", ");
+        queryString.append(
+                columnMetas.stream()
+                        .map(column -> define(column, dialect))
+                        .collect(Collectors.joining(", "))
+        );
+        queryString.append( definePrimaryKeyConstraint(primaryKeyConstraint) );
+
+        queryString.append(")");
+        return this;
     }
 
     public CreateQueryBuilder create(TableName tableName, PrimaryKeyConstraint primaryKeyConstraint, List<ColumnMeta> columns) {
