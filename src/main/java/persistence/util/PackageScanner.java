@@ -10,7 +10,6 @@ import java.util.List;
 public class PackageScanner {
 
     private static final String CLASS_FILE_SUFFIX = ".class";
-    private static final int CLASS_FILE_SUFFIX_SIZE = 6;
     private static final char PACKAGE_DELIMITER = '.';
 
 
@@ -58,7 +57,7 @@ public class PackageScanner {
         }
 
         if (file.getName().endsWith(CLASS_FILE_SUFFIX)) {
-            String className = packageName + PACKAGE_DELIMITER + file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX_SIZE);
+            String className = packageName + PACKAGE_DELIMITER + file.getName().substring(0, file.getName().length() - CLASS_FILE_SUFFIX.length());
             classes.add(Class.forName(className));
             return;
         }
