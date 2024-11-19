@@ -1,12 +1,12 @@
 package persistence.entity.loader;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityIdExtractor;
-import persistence.meta.RelationMeta;
 import persistence.meta.ColumnMeta;
+import persistence.meta.RelationMeta;
+import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.WhereOperator;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
@@ -20,7 +20,8 @@ public class EntityCollectionLoader {
     }
 
     public <T> T loadCollection(Class<T> clazz, Object instance) {
-        List<ColumnMeta> columnMetas = getColumnMetaHasRelation(clazz);
+        SchemaMeta schemaMeta = new SchemaMeta(clazz);
+        List<ColumnMeta> columnMetas = schemaMeta.columnMetasHasRelation();
         for (ColumnMeta columnMeta : columnMetas) {
             RelationMeta relationMeta = columnMeta.relationMeta();
             String query = SelectQueryBuilder.builder()
@@ -39,13 +40,6 @@ public class EntityCollectionLoader {
         }
 
         return clazz.cast(instance);
-    }
-
-    private List<ColumnMeta> getColumnMetaHasRelation(Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> new ColumnMeta(field, clazz))
-                .filter(columnMeta -> columnMeta.relationMeta().hasRelation())
-                .toList();
     }
 
     private void mapChildrenField(Object instance, ColumnMeta columnMeta, List<?> children) {

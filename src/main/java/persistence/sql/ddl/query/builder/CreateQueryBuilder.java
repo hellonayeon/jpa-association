@@ -40,7 +40,7 @@ public class CreateQueryBuilder {
         List<ColumnMeta> columnMetas = Arrays.stream(clazz.getDeclaredFields())
                 .filter(field -> isNotPresent(field, Id.class))
                 .filter(field -> isNotPresent(field, Transient.class))
-                .map(field -> new ColumnMeta(field, clazz))
+                .map(ColumnMeta::new)
                 .toList();
         PrimaryKeyConstraint primaryKeyConstraint = PrimaryKeyConstraint.from(clazz);
 

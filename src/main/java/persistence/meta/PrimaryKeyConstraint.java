@@ -12,7 +12,7 @@ public record PrimaryKeyConstraint(ColumnMeta column,
 
     public static PrimaryKeyConstraint from(Class<?> clazz) {
         Field idField = idField(clazz);
-        return new PrimaryKeyConstraint(new ColumnMeta(idField, clazz), generationType(idField));
+        return new PrimaryKeyConstraint(new ColumnMeta(idField), generationType(idField));
     }
 
     private static Field idField(Class<?> clazz) {

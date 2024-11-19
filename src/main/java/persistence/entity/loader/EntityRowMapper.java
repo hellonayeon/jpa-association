@@ -50,7 +50,7 @@ public class EntityRowMapper<T> implements RowMapper<T> {
     private void mapField(Object object, Field field, ResultSet resultSet) {
         try {
             field.setAccessible(true);
-            field.set(object, resultSet.getObject(new ColumnMeta(field, object.getClass()).name()));
+            field.set(object, resultSet.getObject(new ColumnMeta(field).name()));
         } catch (IllegalAccessException | SQLException ex) {
             throw new RuntimeException(ex);
         }

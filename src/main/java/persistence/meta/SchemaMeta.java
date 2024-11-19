@@ -18,7 +18,7 @@ public record SchemaMeta(Class<?> clazz,
                 clazz,
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
-                        .map(field -> new ColumnMeta(field, clazz))
+                        .map(field -> new ColumnMeta(field))
                         .toList(),
                 Collections.emptyList(),
                 new TableMeta(clazz),
@@ -31,7 +31,7 @@ public record SchemaMeta(Class<?> clazz,
                 instance.getClass(),
                 Arrays.stream(instance.getClass().getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
-                        .map(field -> new ColumnMeta(field, instance.getClass()))
+                        .map(field -> new ColumnMeta(field))
                         .toList(),
                 Arrays.stream(instance.getClass().getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
@@ -44,7 +44,7 @@ public record SchemaMeta(Class<?> clazz,
 
     private boolean hasRelation() {
         return Arrays.stream(clazz.getDeclaredFields())
-                .map(field -> new ColumnMeta(field, clazz))
+                .map(ColumnMeta::new)
                 .map(ColumnMeta::relationMeta)
                 .anyMatch(RelationMeta::hasRelation);
     }
@@ -84,6 +84,19 @@ public record SchemaMeta(Class<?> clazz,
         return columnValueMetas.stream()
                 .filter(ColumnValueMeta::isNotPrimaryKey)
                 .map(ColumnValueMeta::value)
+                .toList();
+    }
+
+    public List<ColumnMeta> columnMetasHasRelation() {
+        return columnMetas.stream()
+                .filter(columnMeta -> columnMeta.relationMeta().hasRelation())
+                .toList();
+    }
+
+    public List<ColumnMeta> columnMetasHasNotRelation() {
+        return columnMetas.stream()
+                .filter(ColumnMeta::isNotPrimaryKey)
+                .filter(columnMeta -> columnMeta.relationMeta().hasNotRelation())
                 .toList();
     }
 

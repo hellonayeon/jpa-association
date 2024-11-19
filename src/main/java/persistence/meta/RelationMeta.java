@@ -75,4 +75,8 @@ public record RelationMeta(Class<?> joinColumnType,
         return hasRelation;
     }
 
+    public boolean hasNotRelation() {
+        return !hasRelation();
+    }
+
 }

@@ -19,7 +19,7 @@ public record ColumnMeta(Field field,
 
     private static final int DEFAULT_LENGTH = 255;
 
-    public ColumnMeta(Field field, Class<?> clazz) {
+    public ColumnMeta(Field field) {
         this(
                 field,
                 ColumnType.getSqlType(field.getType()),
@@ -94,6 +94,14 @@ public record ColumnMeta(Field field,
 
     public boolean isNotPrimaryKey() {
         return !isPrimaryKey;
+    }
+
+    public boolean hasRelation() {
+        return relationMeta.hasRelation();
+    }
+
+    public boolean hasNotRelation() {
+        return relationMeta.hasNotRelation();
     }
 
 }
