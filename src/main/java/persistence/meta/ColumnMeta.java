@@ -1,12 +1,13 @@
 package persistence.meta;
 
+import static persistence.validator.AnnotationValidator.isNotBlank;
 import static persistence.validator.AnnotationValidator.isNotPresent;
+import static persistence.validator.AnnotationValidator.isPresent;
 
 import jakarta.persistence.Column;
 import java.lang.reflect.Field;
 import persistence.entity.Relation;
 import persistence.sql.ddl.type.ColumnType;
-import persistence.sql.metadata.ColumnName;
 
 public record ColumnMeta(Field field,
                          int type,
@@ -21,11 +22,31 @@ public record ColumnMeta(Field field,
         this(
                 field,
                 ColumnType.getSqlType(field.getType()),
-                new ColumnName(field, clazz).value(),
+                getName(field),
                 getLength(field),
                 getNullable(field),
                 Relation.from(field)
         );
+    }
+
+    private static String getName(Field field) {
+        if (isColumnNamePresent(field)) {
+            return getColumnName(field);
+        }
+        return getFieldName(field);
+    }
+
+    private static boolean isColumnNamePresent(Field field) {
+        return isPresent(field, Column.class) && isNotBlank(getColumnName(field));
+    }
+
+    private static String getColumnName(Field field) {
+        Column column = field.getAnnotation(Column.class);
+        return column.name();
+    }
+
+    private static String getFieldName(Field field) {
+        return field.getName();
     }
 
     public ColumnMeta(Field field, String columnName) {

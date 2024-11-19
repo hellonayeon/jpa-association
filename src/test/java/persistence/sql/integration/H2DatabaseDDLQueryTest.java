@@ -11,7 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.sql.ddl.query.CreateQuery;
 import persistence.sql.ddl.query.DropQuery;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.ddl.query.builder.DropQueryBuilder;
@@ -38,11 +37,11 @@ public class H2DatabaseDDLQueryTest {
     void createTable() throws SQLException {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-        CreateQuery query = new CreateQuery(Person.class);
-        CreateQueryBuilder queryBuilder = CreateQueryBuilder.builder(new H2Dialect())
-                .create(query.tableName(), query.primaryKeyConstraint(), query.columns());
+        String query = CreateQueryBuilder.builder(new H2Dialect())
+                .create(Person.class)
+                .build();
 
-        jdbcTemplate.execute(queryBuilder.build());
+        jdbcTemplate.execute(query);
 
         Integer count = jdbcTemplate.queryForObject(
                 getTableExistCheckSelectQuery(),
@@ -56,11 +55,11 @@ public class H2DatabaseDDLQueryTest {
     void dropTable() throws SQLException {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(server.getConnection());
 
-        CreateQuery createQuery = new CreateQuery(Person.class);
-        CreateQueryBuilder queryBuilder = CreateQueryBuilder.builder(new H2Dialect())
-                .create(createQuery.tableName(), createQuery.primaryKeyConstraint(), createQuery.columns());
+        String createQuery = CreateQueryBuilder.builder(new H2Dialect())
+                .create(Person.class)
+                .build();
 
-        jdbcTemplate.execute(queryBuilder.build());
+        jdbcTemplate.execute(createQuery);
         Integer tableCountAfterCreate = jdbcTemplate.queryForObject(
                 getTableExistCheckSelectQuery(),
                 (rs) -> rs.getInt(1)
