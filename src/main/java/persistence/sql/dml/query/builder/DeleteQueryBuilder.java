@@ -4,7 +4,6 @@ import static persistence.sql.dml.query.utils.QueryClauseGenerator.whereClause;
 
 import java.util.List;
 import persistence.sql.dml.query.WhereCondition;
-import persistence.sql.metadata.TableName;
 
 public class DeleteQueryBuilder {
 
@@ -23,10 +22,10 @@ public class DeleteQueryBuilder {
         return queryString.toString();
     }
 
-    public DeleteQueryBuilder delete(TableName tableName) {
+    public DeleteQueryBuilder delete(String tableName) {
         queryString.append( DELETE_FROM )
                 .append( " " )
-                .append( tableName.value() );
+                .append( tableName );
         return this;
     }
 

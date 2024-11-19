@@ -5,7 +5,6 @@ import jdbc.JdbcTemplate;
 import persistence.entity.EntityId;
 import persistence.entity.EntityPersister;
 import persistence.meta.SchemaMeta;
-import persistence.sql.dml.query.DeleteQuery;
 import persistence.sql.dml.query.UpdateQuery;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
@@ -55,11 +54,11 @@ public class DefaultEntityPersister implements EntityPersister {
 
     @Override
     public <T> void delete(T entity) {
-        DeleteQuery query = new DeleteQuery(entity.getClass());
-        String queryString = DeleteQueryBuilder.builder()
-                .delete(query.tableName())
+        SchemaMeta schemaMeta = new SchemaMeta(entity);
+        String query = DeleteQueryBuilder.builder()
+                .delete(schemaMeta.tableName())
                 .build();
-        jdbcTemplate.execute(queryString);
+        jdbcTemplate.execute(query);
     }
 
 }
