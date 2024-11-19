@@ -1,4 +1,4 @@
-package persistence.sql.dml.query.builder;
+package sample.persistence.sql;
 
 import static persistence.sql.dml.query.WhereOperator.EQUAL;
 
@@ -16,6 +16,7 @@ import persistence.exception.NotExistException;
 import persistence.exception.UnknownException;
 import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.WhereCondition;
+import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class AssociationSelectQueryBuilder {
 

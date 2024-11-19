@@ -1,7 +1,7 @@
-package persistence.sql.ddl.query.association;
+package sample.persistence.association;
 
 import java.lang.reflect.Field;
-import persistence.sql.ddl.query.constraint.ForeignKeyConstraint;
+import sample.persistence.constraint.ForeignKeyConstraint;
 
 public interface Association {
 

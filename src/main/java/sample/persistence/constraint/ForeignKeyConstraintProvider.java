@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query.constraint;
+package sample.persistence.constraint;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import persistence.sql.ddl.query.association.Association;
-import persistence.sql.ddl.query.association.AssociationType;
-import persistence.util.PackageScanner;
+import sample.persistence.association.Association;
+import sample.persistence.association.AssociationType;
+import sample.persistence.util.PackageScanner;
 import persistence.validator.AnnotationValidator;
 
 public class ForeignKeyConstraintProvider {

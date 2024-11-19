@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query.association;
+package sample.persistence.association;
 
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -8,8 +8,8 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import persistence.exception.NotExistException;
 import persistence.exception.UnknownException;
-import persistence.sql.ddl.query.constraint.ForeignKeyConstraint;
-import persistence.sql.ddl.query.constraint.SoftForeignKeyConstraint;
+import sample.persistence.constraint.ForeignKeyConstraint;
+import sample.persistence.constraint.SoftForeignKeyConstraint;
 
 public class OneToManyAssociation implements Association {
 

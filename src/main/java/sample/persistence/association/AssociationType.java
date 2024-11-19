@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query.association;
+package sample.persistence.association;
 
 import jakarta.persistence.OneToMany;
 import java.lang.annotation.Annotation;

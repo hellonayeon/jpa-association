@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query.builder;
+package persistence.sql.ddl.query;
 
 import persistence.meta.ColumnMeta;
 import persistence.sql.ddl.type.ColumnType;

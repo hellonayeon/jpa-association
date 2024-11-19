@@ -1,8 +1,8 @@
 package persistence.sql.ddl.query.builder;
 
-import static persistence.sql.ddl.query.builder.ColumnDefinition.define;
-import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyColumn;
-import static persistence.sql.ddl.query.builder.TableDefinition.definePrimaryKeyConstraint;
+import static persistence.sql.ddl.query.ColumnDefinition.define;
+import static persistence.sql.ddl.query.TableDefinition.definePrimaryKeyColumn;
+import static persistence.sql.ddl.query.TableDefinition.definePrimaryKeyConstraint;
 import static persistence.validator.AnnotationValidator.isNotPresent;
 
 import jakarta.persistence.Id;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import persistence.meta.ColumnMeta;
 import persistence.meta.TableMeta;
-import persistence.sql.ddl.query.constraint.PrimaryKeyConstraint;
+import persistence.meta.PrimaryKeyConstraint;
 import persistence.sql.dialect.Dialect;
 
 public class CreateQueryBuilder {

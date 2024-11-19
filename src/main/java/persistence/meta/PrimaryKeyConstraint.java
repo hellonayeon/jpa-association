@@ -1,4 +1,4 @@
-package persistence.sql.ddl.query.constraint;
+package persistence.meta;
 
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -6,7 +6,6 @@ import jakarta.persistence.Id;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import persistence.exception.NotExistException;
-import persistence.meta.ColumnMeta;
 
 public record PrimaryKeyConstraint(ColumnMeta column,
                                    GenerationType generationType) {

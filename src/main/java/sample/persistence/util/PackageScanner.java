@@ -1,4 +1,4 @@
-package persistence.util;
+package sample.persistence.util;
 
 import java.io.File;
 import java.io.IOException;
