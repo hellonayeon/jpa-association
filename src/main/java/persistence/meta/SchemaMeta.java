@@ -6,7 +6,6 @@ import jakarta.persistence.Transient;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import persistence.entity.Relation;
 
 public record SchemaMeta(Class<?> clazz,
                          List<ColumnMeta> columnMetas,
@@ -46,8 +45,8 @@ public record SchemaMeta(Class<?> clazz,
     private boolean hasRelation() {
         return Arrays.stream(clazz.getDeclaredFields())
                 .map(field -> new ColumnMeta(field, clazz))
-                .map(ColumnMeta::relation)
-                .anyMatch(Relation::hasRelation);
+                .map(ColumnMeta::relationMeta)
+                .anyMatch(RelationMeta::hasRelation);
     }
 
     public boolean hasNotRelation() {

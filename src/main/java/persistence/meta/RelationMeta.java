@@ -1,4 +1,4 @@
-package persistence.entity;
+package persistence.meta;
 
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
@@ -8,48 +8,36 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import persistence.exception.NotExistException;
 import persistence.exception.UnknownException;
-import persistence.meta.TableMeta;
 
-public class Relation {
+public record RelationMeta(Class<?> joinColumnType,
+                           String joinTableName,
+                           String joinColumnName,
+                           FetchType fetchType,
+                           boolean hasRelation) {
 
-    private final Class<?> joinColumnType;
-    private final String joinTableName;
-    private final String joinColumnName;
-    private final FetchType fetchType;
-    private final boolean hasRelation;
-
-    private Relation() {
-        this.joinColumnType = null;
-        this.joinTableName = null;
-        this.joinColumnName = null;
-        this.fetchType = null;
-        this.hasRelation = false;
+    private RelationMeta() {
+        this(null, null, null, null, false);
     }
 
-    private Relation(Class<?> joinColumnType, String joinTableName, String joinColumnName, FetchType fetchType) {
-        this.joinColumnType = joinColumnType;
-        this.joinTableName = joinTableName;
-        this.joinColumnName = joinColumnName;
-        this.fetchType = fetchType;
-        this.hasRelation = true;
+    private RelationMeta(Class<?> joinColumnType, String joinTableName, String joinColumnName, FetchType fetchType) {
+        this(joinColumnType, joinTableName, joinColumnName, fetchType, true);
     }
 
-
-    public static Relation from(Field field) {
+    public static RelationMeta from(Field field) {
         if (field.isAnnotationPresent(OneToMany.class)) {
             return oneToManyRelation(field);
         }
 
-        return new Relation();
+        return new RelationMeta();
     }
 
-    private static Relation oneToManyRelation(Field field) {
+    private static RelationMeta oneToManyRelation(Field field) {
         Type genericType = field.getGenericType();
         if (genericType instanceof ParameterizedType parameterizedType) {
             Type type = parameterizedType.getActualTypeArguments()[0];
             Class<?> typeClazz = (Class<?>) type;
             OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-            return new Relation(
+            return new RelationMeta(
                     typeClazz,
                     (new TableMeta(typeClazz)).name(),
                     joinColumnName(field),

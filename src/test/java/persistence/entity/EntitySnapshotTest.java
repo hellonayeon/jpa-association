@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import persistence.entity.context.snapshot.EntitySnapshot;
 import persistence.fixture.SimpleEntityFixture;
 
 class EntitySnapshotTest {

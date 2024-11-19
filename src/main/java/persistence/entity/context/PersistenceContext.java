@@ -1,6 +1,8 @@
-package persistence.entity;
+package persistence.entity.context;
 
 import java.util.Optional;
+import persistence.entity.context.snapshot.EntitySnapshot;
+import persistence.entity.context.status.EntityStatus;
 
 public interface PersistenceContext {
 

@@ -1,4 +1,4 @@
-package persistence.entity.impl;
+package persistence.entity.loader;
 
 import static persistence.validator.AnnotationValidator.notPredicate;
 

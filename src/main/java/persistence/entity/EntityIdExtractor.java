@@ -5,13 +5,13 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import persistence.exception.NotExistException;
 
-public class EntityId {
+public class EntityIdExtractor {
 
-    private EntityId() {
+    private EntityIdExtractor() {
 
     }
 
-    public static Object getIdValue(Object entity) {
+    public static Object extractIdValue(Object entity) {
         Field[] fields = entity.getClass().getDeclaredFields();
         Field idField = Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(Id.class))
@@ -26,7 +26,7 @@ public class EntityId {
         }
     }
 
-    public static Field getIdField(Object entity) {
+    public static Field extractIdField(Object entity) {
         Field[] fields = entity.getClass().getDeclaredFields();
         return Arrays.stream(fields)
                 .filter(field -> field.isAnnotationPresent(Id.class))

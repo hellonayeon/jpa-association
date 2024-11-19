@@ -1,11 +1,11 @@
-package persistence.entity.impl;
+package persistence.entity.loader;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import jdbc.JdbcTemplate;
-import persistence.entity.EntityId;
-import persistence.entity.Relation;
+import persistence.entity.EntityIdExtractor;
+import persistence.meta.RelationMeta;
 import persistence.meta.ColumnMeta;
 import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.WhereOperator;
@@ -22,19 +22,19 @@ public class EntityCollectionLoader {
     public <T> T loadCollection(Class<T> clazz, Object instance) {
         List<ColumnMeta> columnMetas = getColumnMetaHasRelation(clazz);
         for (ColumnMeta columnMeta : columnMetas) {
-            Relation relation = columnMeta.relation();
+            RelationMeta relationMeta = columnMeta.relationMeta();
             String query = SelectQueryBuilder.builder()
                     .select()
-                    .from(relation.getJoinTableName())
+                    .from(relationMeta.getJoinTableName())
                     .where(List.of(
                             new WhereCondition(
-                                    relation.getJoinColumnName(),
+                                    relationMeta.getJoinColumnName(),
                                     WhereOperator.EQUAL,
-                                    EntityId.getIdValue(instance)))
+                                    EntityIdExtractor.extractIdValue(instance)))
                     )
                     .build();
 
-            List<?> children = jdbcTemplate.query(query, new EntityRowMapper<>(relation.getJoinColumnType()));
+            List<?> children = jdbcTemplate.query(query, new EntityRowMapper<>(relationMeta.getJoinColumnType()));
             mapChildrenField(instance, columnMeta, children);
         }
 
@@ -44,7 +44,7 @@ public class EntityCollectionLoader {
     private List<ColumnMeta> getColumnMetaHasRelation(Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
                 .map(field -> new ColumnMeta(field, clazz))
-                .filter(columnMeta -> columnMeta.relation().hasRelation())
+                .filter(columnMeta -> columnMeta.relationMeta().hasRelation())
                 .toList();
     }
 

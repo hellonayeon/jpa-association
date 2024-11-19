@@ -1,4 +1,6 @@
-package persistence.entity;
+package persistence.entity.context.status;
+
+import persistence.entity.context.EntityKey;
 
 public class EntityEntry {
 

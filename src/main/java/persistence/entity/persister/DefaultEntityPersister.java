@@ -1,12 +1,11 @@
-package persistence.entity.impl;
+package persistence.entity.persister;
 
 import static persistence.sql.dml.query.WhereOperator.EQUAL;
 
 import java.lang.reflect.Field;
 import java.util.List;
 import jdbc.JdbcTemplate;
-import persistence.entity.EntityId;
-import persistence.entity.EntityPersister;
+import persistence.entity.EntityIdExtractor;
 import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
@@ -36,7 +35,7 @@ public class DefaultEntityPersister implements EntityPersister {
 
 
     private <T> void updateEntityId(T entity, Object id) {
-        Field idField = EntityId.getIdField(entity);
+        Field idField = EntityIdExtractor.extractIdField(entity);
         idField.setAccessible(true);
         try {
             idField.set(entity, id);
@@ -51,7 +50,7 @@ public class DefaultEntityPersister implements EntityPersister {
         String query = UpdateQueryBuilder.builder()
                 .update(schemaMeta.tableName())
                 .set(schemaMeta.columnNamesWithoutPrimaryKey(), schemaMeta.columnValuesWithoutPrimaryKey())
-                .where(List.of(new WhereCondition(schemaMeta.primaryKeyColumnName(), EQUAL, EntityId.getIdValue(entity))))
+                .where(List.of(new WhereCondition(schemaMeta.primaryKeyColumnName(), EQUAL, EntityIdExtractor.extractIdValue(entity))))
                 .build();
         jdbcTemplate.execute(query);
     }

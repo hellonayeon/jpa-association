@@ -1,10 +1,9 @@
-package persistence.sql.dml.query.utils;
+package persistence.sql.dml.query;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import persistence.sql.dml.query.WhereCondition;
 
-public class QueryClauseGenerator {
+public class WhereClauseGenerator {
 
     private static final String WHERE = "where";
     private static final String AND = "and";

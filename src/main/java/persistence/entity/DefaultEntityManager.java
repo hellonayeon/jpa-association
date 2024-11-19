@@ -1,17 +1,19 @@
-package persistence.entity.impl;
+package persistence.entity;
 
-import static persistence.entity.EntityStatus.DELETED;
-import static persistence.entity.EntityStatus.GONE;
-import static persistence.entity.EntityStatus.LOADING;
-import static persistence.entity.EntityStatus.MANAGED;
+import static persistence.entity.context.status.EntityStatus.DELETED;
+import static persistence.entity.context.status.EntityStatus.GONE;
+import static persistence.entity.context.status.EntityStatus.LOADING;
+import static persistence.entity.context.status.EntityStatus.MANAGED;
 
 import java.sql.Connection;
 import java.util.Optional;
 import jdbc.JdbcTemplate;
-import persistence.entity.EntityLoader;
-import persistence.entity.EntityManager;
-import persistence.entity.EntityPersister;
-import persistence.entity.PersistenceContext;
+import persistence.entity.context.DefaultPersistenceContext;
+import persistence.entity.persister.EntityPersister;
+import persistence.entity.context.PersistenceContext;
+import persistence.entity.persister.DefaultEntityPersister;
+import persistence.entity.loader.DefaultEntityLoader;
+import persistence.entity.loader.EntityLoader;
 
 public class DefaultEntityManager implements EntityManager {
 

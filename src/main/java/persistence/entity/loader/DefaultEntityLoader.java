@@ -1,8 +1,7 @@
-package persistence.entity.impl;
+package persistence.entity.loader;
 
 import java.util.List;
 import jdbc.JdbcTemplate;
-import persistence.entity.EntityLoader;
 import persistence.meta.SchemaMeta;
 import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.WhereOperator;

@@ -1,10 +1,11 @@
-package persistence.entity;
+package persistence.entity.context.snapshot;
 
 import java.lang.reflect.Field;
 import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import persistence.entity.context.EntityCopyUtils;
 import persistence.exception.NotSameException;
 
 public record EntitySnapshot(Object entity) {

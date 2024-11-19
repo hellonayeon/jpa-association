@@ -7,7 +7,6 @@ import static persistence.validator.AnnotationValidator.isPresent;
 import jakarta.persistence.Column;
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;
-import persistence.entity.Relation;
 import persistence.sql.ddl.type.ColumnType;
 
 public record ColumnMeta(Field field,
@@ -16,7 +15,7 @@ public record ColumnMeta(Field field,
                          int length,
                          boolean nullable,
                          boolean isPrimaryKey,
-                         Relation relation) {
+                         RelationMeta relationMeta) {
 
     private static final int DEFAULT_LENGTH = 255;
 
@@ -28,7 +27,7 @@ public record ColumnMeta(Field field,
                 getLength(field),
                 getNullable(field),
                 getIsPrimaryKey(field),
-                Relation.from(field)
+                RelationMeta.from(field)
         );
     }
 
@@ -40,7 +39,7 @@ public record ColumnMeta(Field field,
                 getLength(field),
                 getNullable(field),
                 getIsPrimaryKey(field),
-                Relation.from(field)
+                RelationMeta.from(field)
         );
     }
 

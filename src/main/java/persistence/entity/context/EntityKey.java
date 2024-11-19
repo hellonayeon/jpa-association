@@ -1,4 +1,4 @@
-package persistence.entity;
+package persistence.entity.context;
 
 import jakarta.persistence.Id;
 import java.lang.reflect.Field;

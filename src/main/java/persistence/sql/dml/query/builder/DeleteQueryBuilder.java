@@ -1,6 +1,6 @@
 package persistence.sql.dml.query.builder;
 
-import static persistence.sql.dml.query.utils.QueryClauseGenerator.whereClause;
+import static persistence.sql.dml.query.WhereClauseGenerator.whereClause;
 
 import java.util.List;
 import persistence.sql.dml.query.WhereCondition;

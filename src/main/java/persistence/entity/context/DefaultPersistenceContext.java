@@ -1,14 +1,12 @@
-package persistence.entity.impl;
+package persistence.entity.context;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import persistence.entity.EntityEntry;
-import persistence.entity.EntityKey;
-import persistence.entity.EntitySnapshot;
-import persistence.entity.EntityStatus;
-import persistence.entity.PersistenceContext;
+import persistence.entity.context.status.EntityEntry;
+import persistence.entity.context.snapshot.EntitySnapshot;
+import persistence.entity.context.status.EntityStatus;
 import persistence.exception.NotExistException;
 
 public class DefaultPersistenceContext implements PersistenceContext {
