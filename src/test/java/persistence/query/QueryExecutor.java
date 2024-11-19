@@ -1,7 +1,6 @@
 package persistence.query;
 
 import jdbc.JdbcTemplate;
-import persistence.sql.ddl.query.DropQuery;
 import persistence.sql.ddl.query.builder.CreateQueryBuilder;
 import persistence.sql.ddl.query.builder.DropQueryBuilder;
 import persistence.sql.dialect.H2Dialect;
@@ -18,11 +17,10 @@ public class QueryExecutor {
     }
 
     public static void drop(Class<?> clazz, JdbcTemplate jdbcTemplate) {
-        DropQuery dropQuery = new DropQuery(clazz);
-        DropQueryBuilder dropQueryBuilder = DropQueryBuilder.builder(new H2Dialect())
-                .drop(dropQuery.tableName());
-
-        jdbcTemplate.execute(dropQueryBuilder.build());
+        String query = DropQueryBuilder.builder(new H2Dialect())
+                .drop(clazz)
+                .build();
+        jdbcTemplate.execute(query);
     }
 
     public static void insert(Object object, JdbcTemplate jdbcTemplate) {
