@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import jdbc.RowMapper;
-import persistence.sql.metadata.ColumnName;
+import persistence.meta.ColumnMeta;
 
 public class EntityRowMapper<T> implements RowMapper<T> {
 
@@ -50,7 +50,7 @@ public class EntityRowMapper<T> implements RowMapper<T> {
     private void mapField(Object object, Field field, ResultSet resultSet) {
         try {
             field.setAccessible(true);
-            field.set(object, resultSet.getObject(new ColumnName(field, object.getClass()).value()));
+            field.set(object, resultSet.getObject(new ColumnMeta(field, object.getClass()).name()));
         } catch (IllegalAccessException | SQLException ex) {
             throw new RuntimeException(ex);
         }
