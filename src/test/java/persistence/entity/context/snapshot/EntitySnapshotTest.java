@@ -1,4 +1,4 @@
-package persistence.entity;
+package persistence.entity.context.snapshot;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 

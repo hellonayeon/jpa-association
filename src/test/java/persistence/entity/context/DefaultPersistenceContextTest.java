@@ -1,4 +1,4 @@
-package persistence.entity;
+package persistence.entity.context;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import persistence.entity.context.DefaultPersistenceContext;
-import persistence.entity.context.PersistenceContext;
 import sample.domain.Person;
 
 class DefaultPersistenceContextTest {
