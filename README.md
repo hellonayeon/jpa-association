@@ -17,3 +17,15 @@
     - 엔티티 패키지를 스캔하여 모든 연관 관계 정보를 추출하고, 이 정보를 바탕으로 foreign key 에 대한 query string 을 만든다.
 - [ ] 연관관계가 있는 엔티티 조회를 위한 select join query
 - [ ] 데이터베이스로부터 조회한 
+
+# 2단계 - Proxy
+- 미션의 목표
+  - 프록시 사용의 장점 (성능 최적화 · 리소스 절약) 관점에서 프록시를 사용하여 지연 로딩을 구현 해보기
+- 요구 사항 1  - Dynamic Proxy 연습
+  - 주어진 테스트 코드에 맞는 프록시 객체 만들기
+- 요구 사항 2 - Proxy 활용
+  - InvocationHandler 를 활용해 LazyLoading 구현
+
+### 구현 기능 목록
+- [ ] 소문자를 대문자로 캐스팅하는 Proxy 구현
+- [ ] Proxy 를 활용하여 LazyLoadingHandler 구현
