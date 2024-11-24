@@ -87,8 +87,16 @@ public record SchemaMeta(Class<?> clazz,
                 .toList();
     }
 
+    public List<Object> columnValuesMatchWith(List<ColumnMeta> columnMetas, Object instance) {
+        return columnMetas.stream()
+                .map(columnMeta -> ColumnValueMeta.of(columnMeta.field(), instance))
+                .map(ColumnValueMeta::value)
+                .toList();
+    }
+
     public List<ColumnMeta> columnMetasHasRelation() {
         return columnMetas.stream()
+                .filter(ColumnMeta::isNotPrimaryKey)
                 .filter(columnMeta -> columnMeta.relationMeta().hasRelation())
                 .toList();
     }

@@ -3,15 +3,12 @@ package persistence.entity.persister;
 import static persistence.sql.dml.query.WhereOperator.EQUAL;
 
 import java.lang.reflect.Field;
-import java.util.Arrays;
 import java.util.List;
 import jdbc.JdbcTemplate;
 import persistence.entity.EntityIdExtractor;
 import persistence.meta.ColumnMeta;
-import persistence.meta.ColumnValueMeta;
 import persistence.meta.RelationMeta;
 import persistence.meta.SchemaMeta;
-import persistence.meta.TableMeta;
 import persistence.sql.dml.query.WhereCondition;
 import persistence.sql.dml.query.builder.DeleteQueryBuilder;
 import persistence.sql.dml.query.builder.InsertQueryBuilder;
@@ -33,19 +30,12 @@ public class DefaultEntityPersister implements EntityPersister {
     }
 
     private <T> void insertEntity(T entity) {
-        TableMeta tableMeta = new TableMeta(entity.getClass());
-        List<ColumnMeta> columnMetas = Arrays.stream(entity.getClass().getDeclaredFields())
-                .map(ColumnMeta::new)
-                .filter(ColumnMeta::isNotPrimaryKey)
-                .filter(ColumnMeta::hasNotRelation)
-                .toList();
-        List<Object> columnValues = columnMetas.stream()
-                .map(columnMeta -> ColumnValueMeta.of(columnMeta.field(), entity))
-                .map(ColumnValueMeta::value)
-                .toList();
+        SchemaMeta schemaMeta = new SchemaMeta(entity);
+        List<ColumnMeta> columnMetas = schemaMeta.columnMetasHasNotRelation();
+        List<Object> columnValues = schemaMeta.columnValuesMatchWith(columnMetas, entity);
 
         String query = InsertQueryBuilder.builder()
-                .insert(tableMeta, columnMetas)
+                .insert(schemaMeta.tableMeta(), columnMetas)
                 .values(columnValues)
                 .build();
         Object parentId = jdbcTemplate.insertAndGetPrimaryKey(query);
@@ -53,20 +43,17 @@ public class DefaultEntityPersister implements EntityPersister {
     }
 
     private <T> void insertRelatedEntity(T entity) {
-        List<ColumnMeta> columnMetas = Arrays.stream(entity.getClass().getDeclaredFields())
-                .map(ColumnMeta::new)
-                .filter(ColumnMeta::isNotPrimaryKey)
-                .filter(ColumnMeta::hasRelation)
-                .toList();
+        SchemaMeta schemaMeta = new SchemaMeta(entity);
+        List<ColumnMeta> columnMetas = schemaMeta.columnMetasHasRelation();
 
         for (ColumnMeta columnMeta : columnMetas) {
             RelationMeta relationMeta = columnMeta.relationMeta();
             List<?> relatedEntities = extractEntities(entity, columnMeta);
             for (Object relatedEntity : relatedEntities) {
-                SchemaMeta schemaMeta = new SchemaMeta(relatedEntity);
+                SchemaMeta relatedSchemaMeta = new SchemaMeta(relatedEntity);
                 String query = InsertQueryBuilder.builder()
-                        .insert(relationMeta.joinTableName(), schemaMeta.columnNamesWithoutPrimaryKey(), List.of(relationMeta.joinColumnName()))
-                        .values(schemaMeta.columnValuesWithoutPrimaryKey(), List.of(EntityIdExtractor.extractIdValue(entity)))
+                        .insert(relationMeta.joinTableName(), relatedSchemaMeta.columnNamesWithoutPrimaryKey(), List.of(relationMeta.joinColumnName()))
+                        .values(relatedSchemaMeta.columnValuesWithoutPrimaryKey(), List.of(EntityIdExtractor.extractIdValue(entity)))
                         .build();
 
                 Object id = jdbcTemplate.insertAndGetPrimaryKey(query);
