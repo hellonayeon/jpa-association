@@ -18,7 +18,7 @@ public record SchemaMeta(Class<?> clazz,
                 clazz,
                 Arrays.stream(clazz.getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
-                        .map(field -> new ColumnMeta(field))
+                        .map(ColumnMeta::new)
                         .toList(),
                 Collections.emptyList(),
                 new TableMeta(clazz),
@@ -31,7 +31,7 @@ public record SchemaMeta(Class<?> clazz,
                 instance.getClass(),
                 Arrays.stream(instance.getClass().getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
-                        .map(field -> new ColumnMeta(field))
+                        .map(ColumnMeta::new)
                         .toList(),
                 Arrays.stream(instance.getClass().getDeclaredFields())
                         .filter(field -> isNotPresent(field, Transient.class))
