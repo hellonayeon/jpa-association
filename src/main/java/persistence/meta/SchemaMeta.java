@@ -102,4 +102,11 @@ public record SchemaMeta(Class<?> clazz,
                 .toList();
     }
 
+    public List<String> columnNamesWithoutRelation() {
+        return columnMetas.stream()
+                .filter(columnMeta -> columnMeta.relationMeta().hasNotRelation())
+                .map(ColumnMeta::name)
+                .toList();
+    }
+
 }

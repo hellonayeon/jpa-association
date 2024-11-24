@@ -26,7 +26,7 @@ public class DefaultEntityLoader implements EntityLoader {
     public <T> T load(Class<T> clazz, Object id) {
         SchemaMeta schemaMeta = new SchemaMeta(clazz);
         String query = SelectQueryBuilder.builder()
-                .select()
+                .select(schemaMeta.columnNamesWithoutRelation(), schemaMeta.tableName())
                 .from(schemaMeta.tableName())
                 .where(List.of(new WhereCondition(schemaMeta.primaryKeyColumnName(), WhereOperator.EQUAL, id)))
                 .build();
