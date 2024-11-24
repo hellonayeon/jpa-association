@@ -67,12 +67,6 @@ public record SchemaMeta(Class<?> clazz,
                 .toList();
     }
 
-    public List<Object> columnValues() {
-        return columnValueMetas.stream()
-                .map(ColumnValueMeta::value)
-                .toList();
-    }
-
     public List<String> columnNamesWithoutPrimaryKey() {
         return columnMetas.stream()
                 .filter(ColumnMeta::isNotPrimaryKey)
