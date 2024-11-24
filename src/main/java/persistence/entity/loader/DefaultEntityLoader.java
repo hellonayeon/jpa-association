@@ -38,23 +38,31 @@ public class DefaultEntityLoader implements EntityLoader {
 
         List<ColumnMeta> columnMetasWithRelation = schemaMeta.columnMetasHasRelation();
         for (ColumnMeta columnMeta : columnMetasWithRelation) {
-            RelationMeta relationMeta = columnMeta.relationMeta();
-            if (FetchType.EAGER == relationMeta.fetchType()) {
-                List<?> children = eagerLoad(columnMeta, id);
-                mapChildrenField(instance, columnMeta, children);
-            }
-
-            if (FetchType.LAZY == relationMeta.fetchType()) {
-                List<?> children = CollectionEntityProxy.createProxy(columnMeta, id, collectionLoader);
-                mapChildrenField(instance, columnMeta, children);
-            }
+            load(instance, id, columnMeta);
         }
 
         return clazz.cast(instance);
     }
 
+    private <T> void load(T instance, Object id, ColumnMeta columnMeta) {
+        RelationMeta relationMeta = columnMeta.relationMeta();
+        if (FetchType.EAGER == relationMeta.fetchType()) {
+            List<?> children = eagerLoad(columnMeta, id);
+            mapChildrenField(instance, columnMeta, children);
+        }
+
+        if (FetchType.LAZY == relationMeta.fetchType()) {
+            List<?> children = lazyLoad(columnMeta, id);
+            mapChildrenField(instance, columnMeta, children);
+        }
+    }
+
     private List<?> eagerLoad(ColumnMeta columnMeta, Object id) {
         return collectionLoader.load(columnMeta.relationMeta().joinColumnType(), columnMeta.field(), id);
+    }
+
+    private List<?> lazyLoad(ColumnMeta columnMeta, Object id) {
+        return CollectionEntityProxy.createProxy(columnMeta, id, collectionLoader);
     }
 
     private void mapChildrenField(Object instance, ColumnMeta columnMeta, List<?> children) {
