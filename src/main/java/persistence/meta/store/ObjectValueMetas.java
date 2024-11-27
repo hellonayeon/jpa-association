@@ -13,4 +13,12 @@ public class ObjectValueMetas {
                 .toList();
     }
 
+    public static List<Object> valuesWithoutPrimaryKey(List<ColumnMeta> columnMetas, Object instance) {
+        return columnMetas.stream()
+                .filter(ColumnMeta::isNotPrimaryKey)
+                .map(columnMeta -> ColumnValueMeta.of(columnMeta.field(), instance))
+                .map(ColumnValueMeta::value)
+                .toList();
+    }
+
 }
