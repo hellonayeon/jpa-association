@@ -9,8 +9,6 @@ import persistence.meta.ColumnMeta;
 import persistence.meta.RelationMeta;
 import persistence.meta.SchemaMeta;
 import persistence.meta.SchemaMetaStore;
-import persistence.sql.dml.query.WhereCondition;
-import persistence.sql.dml.query.WhereOperator;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class DefaultEntityLoader implements EntityLoader {
@@ -26,11 +24,7 @@ public class DefaultEntityLoader implements EntityLoader {
     @Override
     public <T> T load(Class<T> clazz, Object id) {
         SchemaMeta schemaMeta = SchemaMetaStore.get(clazz);
-        String query = SelectQueryBuilder.builder()
-                .select(schemaMeta.columnNamesWithoutRelation(), schemaMeta.tableName())
-                .from(schemaMeta.tableName())
-                .where(List.of(new WhereCondition(schemaMeta.primaryKeyColumnName(), WhereOperator.EQUAL, id)))
-                .build();
+        String query = SelectQueryBuilder.builder(schemaMeta, id).build();
 
         T instance = jdbcTemplate.queryForObject(query, new EntityRowMapper<>(clazz));
         if (schemaMeta.hasNotRelation()) {
