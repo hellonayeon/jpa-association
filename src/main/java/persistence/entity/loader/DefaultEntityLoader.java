@@ -8,7 +8,7 @@ import persistence.entity.loader.proxy.CollectionEntityProxy;
 import persistence.meta.ColumnMeta;
 import persistence.meta.RelationMeta;
 import persistence.meta.SchemaMeta;
-import persistence.meta.SchemaMetaStore;
+import persistence.meta.store.ClassSchemaMetas;
 import persistence.sql.dml.query.builder.SelectQueryBuilder;
 
 public class DefaultEntityLoader implements EntityLoader {
@@ -23,7 +23,7 @@ public class DefaultEntityLoader implements EntityLoader {
 
     @Override
     public <T> T load(Class<T> clazz, Object id) {
-        SchemaMeta schemaMeta = SchemaMetaStore.get(clazz);
+        SchemaMeta schemaMeta = ClassSchemaMetas.get(clazz);
         String query = SelectQueryBuilder.builder(schemaMeta, id).build();
 
         T instance = jdbcTemplate.queryForObject(query, new EntityRowMapper<>(clazz));
